@@ -14,6 +14,10 @@ for (const game of games) {
     throw new Error(`Unsupported engine "${game.engine}" in ${game.id}.`);
   }
   counts[game.engine] = (counts[game.engine] || 0) + 1;
+  const bank = game.questionBank || game.questions || game.cards || game.items || game.words || [];
+  if (bank.length < 400) {
+    throw new Error(`Activity bank must contain at least 400 items: ${game.id} has ${bank.length}.`);
+  }
   if (game.engine === "quiz" && !(game.questions || []).length) {
     throw new Error(`Quiz activity has no questions: ${game.id}`);
   }
@@ -31,5 +35,5 @@ for (const game of games) {
   }
 }
 
-console.log(`PASS: ${games.length} language activities`);
+console.log(`PASS: ${games.length} language activities; every activity has at least 400 bank items.`);
 console.log("Engine distribution:", JSON.stringify(counts));
