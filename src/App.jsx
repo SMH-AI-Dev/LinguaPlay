@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { ArrowRight, BookOpen, Brain, CheckCircle2, ChevronLeft, GraduationCap, Headphones, Home, Info, Search, Sparkles, Trophy, Volume2, X } from "lucide-react";
-import englishGames from "./data/englishGames.js";
+import englishGames from "./data/allLanguageGames.js";
 
 const CATEGORIES = [
   { id: "All", label: "همه فعالیت‌ها", icon: "🌈" },
