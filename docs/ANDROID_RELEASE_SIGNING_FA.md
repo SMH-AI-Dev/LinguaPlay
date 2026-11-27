@@ -2,6 +2,19 @@
 
 ## ۱. ساخت کلید اختصاصی
 
+برای ساخت هم‌زمان کلیدهای مستقل KlassYar و LinguaPlay، اسکریپت PowerShell زیر در مخزن KlassYar قرار داده شده است:
+
+`https://github.com/SMH-AI-Dev/klassyar/blob/main/scripts/create-two-android-signing-keys.ps1`
+
+آن را در یک checkout محلی از مخزن KlassYar اجرا کنید. فایل کلید LinguaPlay با alias برابر `linguaplay` در مسیر محلی `%LOCALAPPDATA%\\SMH-Android-Signing` ایجاد می‌شود. کلید و فایل Base64 آن را هرگز به Git اضافه نکنید.
+
+اگر ساخت دستی را ترجیح می‌دهید، فرمان زیر را در PowerShell و خارج از مخزن اجرا کنید:
+
+```powershell
+keytool -genkeypair -v -keystore linguaplay-release.jks -alias linguaplay -keyalg RSA -keysize 4096 -validity 10000
+```
+
+
 این فرمان را در PowerShell ویندوز، در پوشه‌ای خارج از مخزن اجرا کنید:
 
 ```powershell
