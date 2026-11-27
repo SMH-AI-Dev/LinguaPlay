@@ -3,6 +3,7 @@ import games from "../src/data/allLanguageGames.js";
 const expectedCount = 350;
 const allowedEngines = new Set(["quiz", "match", "type", "fillblank", "scramble", "sort"]);
 const counts = {};
+const seenIds = new Set();
 
 if (games.length !== expectedCount) {
   throw new Error(`Expected ${expectedCount} language activities, received ${games.length}.`);
@@ -10,6 +11,8 @@ if (games.length !== expectedCount) {
 
 for (const game of games) {
   if (!game.id || !game.title) throw new Error("A language activity is missing its id or title.");
+  if (seenIds.has(game.id)) throw new Error(`Duplicate activity id: ${game.id}`);
+  seenIds.add(game.id);
   if (!allowedEngines.has(game.engine)) {
     throw new Error(`Unsupported engine "${game.engine}" in ${game.id}.`);
   }
