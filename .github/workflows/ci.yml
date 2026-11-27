@@ -25,8 +25,40 @@ jobs:
       - run: npm run audit:catalog
       - run: npx cap add android
       - run: npx cap sync android
-      - name: Build Android debug APK for platform verification
+      - name: Create disposable CI signing key
+        run: |
+          keytool -genkeypair -noprompt -v -storetype JKS \
+            -keystore "$RUNNER_TEMP/linguaplay-ci-test.jks" \
+            -alias ci-test -keyalg RSA -keysize 2048 -validity 3650 \
+            -storepass ci-test-store-password -keypass ci-test-key-password \
+            -dname "CN=LinguaPlay CI Test, OU=CI, O=SMH-AI-Dev, L=CI, ST=CI, C=US"
+
+      - name: Configure release signing with disposable CI key
+        env:
+          LINGUAPLAY_ANDROID_KEYSTORE_FILE: ${{ runner.temp }}/linguaplay-ci-test.jks
+          LINGUAPLAY_ANDROID_STORE_PASSWORD: ci-test-store-password
+          LINGUAPLAY_ANDROID_KEY_ALIAS: ci-test
+          LINGUAPLAY_ANDROID_KEY_PASSWORD: ci-test-key-password
+        run: node scripts/configure-android-signing.mjs
+
+      - name: Build Android debug APK, signed APK, and AAB for verification
         working-directory: android
+        env:
+          LINGUAPLAY_ANDROID_KEYSTORE_FILE: ${{ runner.temp }}/linguaplay-ci-test.jks
+          LINGUAPLAY_ANDROID_STORE_PASSWORD: ci-test-store-password
+          LINGUAPLAY_ANDROID_KEY_ALIAS: ci-test
+          LINGUAPLAY_ANDROID_KEY_PASSWORD: ci-test-key-password
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug assembleRelease bundleRelease --no-daemon
+
+      - name: Verify disposable release signatures
+        run: |
+          APK="$(find android/app/build/outputs/apk/release -name '*.apk' -print -quit)"
+          AAB="$(find android/app/build/outputs/bundle/release -name '*.aab' -print -quit)"
+          test -n "$APK"
+          test -n "$AAB"
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)"
+          test -n "$APKSIGNER"
+          "$APKSIGNER" verify --verbose --print-certs "$APK"
+          jarsigner -verify -verbose -certs "$AAB" >/dev/null
