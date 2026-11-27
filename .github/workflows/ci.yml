@@ -25,6 +25,7 @@ jobs:
       - run: npm run audit:catalog
       - run: npx cap add android
       - run: npx cap sync android
+      - run: node scripts/set-android-version.mjs
       - name: Create disposable CI signing key
         run: |
           keytool -genkeypair -noprompt -v -storetype JKS \
