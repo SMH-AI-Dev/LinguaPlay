@@ -11,7 +11,7 @@
 اگر ساخت دستی را ترجیح می‌دهید، فرمان زیر را در PowerShell و خارج از مخزن اجرا کنید:
 
 ```powershell
-keytool -genkeypair -v -keystore linguaplay-release.jks -alias linguaplay -keyalg RSA -keysize 4096 -validity 10000
+keytool -genkeypair -v -keystore linguaplay-release.jks -alias linguaplay -storetype JKS -keyalg RSA -keysize 4096 -validity 10000
 ```
 
 
