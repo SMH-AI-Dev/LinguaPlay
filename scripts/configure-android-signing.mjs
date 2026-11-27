@@ -32,14 +32,14 @@ const signingBlock = `
     }
 `;
 
-if (!/android\\s*\\{/.test(gradle)) throw new Error("Could not locate android { } block.");
-gradle = gradle.replace(/android\\s*\\{/, (match) => match + signingBlock);
-if (!/buildTypes\\s*\\{\\s*release\\s*\\{/.test(gradle)) {
+if (!/android\s*\{/.test(gradle)) throw new Error("Could not locate android { } block.");
+gradle = gradle.replace(/android\s*\{/, (match) => match + signingBlock);
+if (!/buildTypes\s*\{\s*release\s*\{/.test(gradle)) {
   throw new Error("Could not locate release build type.");
 }
 gradle = gradle.replace(
-  /(buildTypes\\s*\\{\\s*release\\s*\\{)/,
-  "$1\\n            signingConfig signingConfigs.linguaplayRelease"
+  /(buildTypes\s*\{\s*release\s*\{)/,
+  "$1\n            signingConfig signingConfigs.linguaplayRelease"
 );
 fs.writeFileSync(gradleFile, gradle);
 console.log("LinguaPlay release signing configured.");
