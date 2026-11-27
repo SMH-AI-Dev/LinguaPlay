@@ -207,12 +207,12 @@ export function createProceduralGames() {
   const grammar = uniqueRecords("grammar", (entry) => entry.rule && entry.example);
   const listening = uniqueRecords("listening", (entry) => entry.text && entry.answers?.[0]);
   const activityGroups = [
-    { engine: "quiz", icon: "🧠", title: "دانش‌پژوه", description: "تمرین واژگان انگلیسی از محتوای درسی موجود", bank: (edition) => vocabularyQuestions(vocabulary, edition) },
-    { engine: "match", icon: "🃏", title: "جفت‌یاب", description: "جفت‌سازی واژه‌های انگلیسی و معنی فارسی", bank: (edition) => vocabularyCards(vocabulary, edition) },
-    { engine: "sort", icon: "🗂️", title: "دسته‌بند", description: "دسته‌بندی واژه‌ها بر پایه پایهٔ درسی", bank: (edition) => vocabularySortItems(vocabulary, edition).items },
-    { engine: "fillblank", icon: "✍️", title: "جای‌خالی", description: "تمرین قاعده‌های گرامری در جمله‌های درسی", bank: (edition) => grammarBlanks(grammar, edition) },
-    { engine: "type", icon: "🗳️", title: "پاسخ‌گزین", description: "انتخاب پاسخ به پرسش‌های شنیداری درسی", bank: (edition) => listeningTyping(listening, edition) },
-    { engine: "scramble", icon: "🔤", title: "واژه‌ساز", description: "مرتب‌کردن حروف واژه‌های درسی", bank: (edition) => vocabularyScrambles(vocabulary, edition) },
+    { engine: "quiz", category: "Vocabulary", icon: "🧠", title: "دانش‌پژوه", description: "تمرین واژگان انگلیسی از محتوای درسی موجود", bank: (edition) => vocabularyQuestions(vocabulary, edition) },
+    { engine: "match", category: "Vocabulary", icon: "🃏", title: "جفت‌یاب", description: "جفت‌سازی واژه‌های انگلیسی و معنی فارسی", bank: (edition) => vocabularyCards(vocabulary, edition) },
+    { engine: "sort", category: "Vocabulary", icon: "🗂️", title: "دسته‌بند", description: "دسته‌بندی واژه‌ها بر پایه پایهٔ درسی", bank: (edition) => vocabularySortItems(vocabulary, edition).items },
+    { engine: "fillblank", category: "Grammar", icon: "✍️", title: "جای‌خالی", description: "تمرین قاعده‌های گرامری در جمله‌های درسی", bank: (edition) => grammarBlanks(grammar, edition) },
+    { engine: "type", category: "Listening", icon: "🗳️", title: "پاسخ‌گزین", description: "انتخاب پاسخ به پرسش‌های شنیداری درسی", bank: (edition) => listeningTyping(listening, edition) },
+    { engine: "scramble", category: "Spelling", icon: "🔤", title: "واژه‌ساز", description: "مرتب‌کردن حروف واژه‌های درسی", bank: (edition) => vocabularyScrambles(vocabulary, edition) },
   ];
   const editions = Array.from({ length: 50 }, (_, index) => index + 1);
   return activityGroups.flatMap((group) => editions.map((edition) => {
@@ -223,7 +223,7 @@ export function createProceduralGames() {
       title: `${group.title}: ${activityName}`,
       description: `${group.description}؛ ${activityName}، دورهٔ تمرین ${edition}.`,
       icon: group.icon,
-      category: "English Practice",
+      category: group.category,
       difficulty: edition <= 17 ? "Beginner" : edition <= 34 ? "Intermediate" : "Advanced",
       engine: group.engine,
       questionBank: bank,
