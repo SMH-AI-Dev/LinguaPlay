@@ -66,7 +66,7 @@ function GameSession({ game, onClose, onComplete }) {
     game.engine === "sort" ? (game.items || []) : [];
   const current = items[index] || {};
   const total = items.length;
-  const done = () => { setFinished(true); onComplete(score); };
+  const done = (finalScore = score) => { setFinished(true); onComplete(finalScore); };
   const advance = (correct) => {
     if (correct) setScore(v => v + 1);
     setFeedback(correct ? "درست بود! آفرین 🌟" : "این بار درست نبود؛ پاسخ را بررسی کن.");
@@ -74,7 +74,7 @@ function GameSession({ game, onClose, onComplete }) {
       setFeedback("");
       setSelected(null);
       setTyped("");
-      if (index + 1 >= total) done();
+      if (index + 1 >= total) done(score + (correct ? 1 : 0));
       else setIndex(v => v + 1);
     }, 650);
   };
